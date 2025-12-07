@@ -1,0 +1,18 @@
+[project]
+name = "prbr25-db-ops"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Gabriel Medeiros",email = "gabrielspmedeiros@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "prbr-rds-client @ git+https://github.com/GabrielSPMed/prbr-rds-client.git",
+    "prbr25-logger @ git+https://github.com/GabrielSPMed/prbr25-logger"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
