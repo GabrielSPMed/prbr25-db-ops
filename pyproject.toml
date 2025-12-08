@@ -8,6 +8,8 @@ requires-python = ">=3.12"
 dependencies = [
     "prbr-rds-client @ git+https://github.com/GabrielSPMed/prbr-rds-client.git",
     "prbr25-logger @ git+https://github.com/GabrielSPMed/prbr25-logger",
+    "pandas (>=2.3.3,<3.0.0)",
+    "thefuzz (>=0.22.1,<0.23.0)",
 ]
 
 
