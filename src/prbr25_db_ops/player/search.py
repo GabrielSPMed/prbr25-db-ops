@@ -1,3 +1,4 @@
+from pandas import DataFrame
 from prbr25_rds_client.postgres import Postgres
 
 
@@ -17,3 +18,9 @@ def is_player_consolidated(sql: Postgres, id: int) -> bool:
     result = sql.query_db(query, table_name)
 
     return len(result) > 0
+
+
+def fetch_all_players(sql: Postgres) -> DataFrame:
+    table_name = "players"
+    query = f"SELECT * FROM {table_name}"
+    return sql.query_db(query, table_name)
