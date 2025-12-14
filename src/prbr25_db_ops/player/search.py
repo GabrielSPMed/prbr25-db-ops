@@ -24,3 +24,10 @@ def fetch_all_players(sql: Postgres) -> DataFrame:
     table_name = "players"
     query = f"SELECT * FROM {table_name}"
     return sql.query_db(query, table_name)
+
+
+def get_tag_from_player_id(sql: Postgres, id: int) -> str:
+    table_name = "players"
+    query = f"SELECT tag FROM {table_name} WHERE id = {id}"
+    result = sql.query_db(query, table_name)
+    return result["tag"].iloc[0]
