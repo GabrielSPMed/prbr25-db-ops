@@ -14,14 +14,9 @@ def create_monthly_tracking_dataframe(start_year: int, start_month: int) -> Data
     year = start_year
     month = start_month
 
-    for i in range(12):
+    for _ in range(12):
         data.append(
-            {
-                "year": year,
-                "month": month,
-                "report": i == 0,
-                "updated_values": i == 0,
-            }
+            {"year": year, "month": month, "report": False, "updated_values": False}
         )
 
         month += 1
