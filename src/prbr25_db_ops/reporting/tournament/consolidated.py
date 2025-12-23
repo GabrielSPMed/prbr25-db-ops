@@ -12,7 +12,7 @@ def get_validated_tournaments(
     end_date = start_date + relativedelta(months=1)
     query = f"""SELECT c.tournament_name, c.event_name, c.address_state, c.start_at, c.num_entrants, r.value, r.n_dqs, c.url
                 FROM raw_events AS r
-                INNER JOIN consolidated_events AS c ON r.event_id = c.id
+                INNER JOIN consolidated_events AS c ON r.id = c.id
                 WHERE r.start_date BETWEEN '{start_date}' AND '{end_date}'
             """
     df = sql.query_db(query, "raw_events")
