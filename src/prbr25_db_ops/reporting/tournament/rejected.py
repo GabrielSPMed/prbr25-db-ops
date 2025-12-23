@@ -12,7 +12,7 @@ def get_rejected_tournaments(
     end_date = start_date + relativedelta(months=1)
     query = f"""SELECT tournament_name AS nome_torneio, event_name AS nome_evento, address_state AS estado, url AS link
                 FROM raw_events
-                WHERE start_at BETWEEN '{start_date}' AND '{end_date}'
+                WHERE validated IS NULL AND start_at BETWEEN '{start_date}' AND '{end_date}'
             """
     df = sql.query_db(query, "raw_events")
     df["motivo"] = ""
