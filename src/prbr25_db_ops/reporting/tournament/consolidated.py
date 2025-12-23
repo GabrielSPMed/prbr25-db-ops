@@ -14,7 +14,7 @@ def get_validated_tournaments(
     query = f"""SELECT r.tournament_name, r.event_name, r.address_state, r.start_at, r.num_entrants, c.value AS score, c.n_dqs, r.url
                 FROM raw_events AS r
                 INNER JOIN consolidated_events AS c ON r.id = c.id
-                WHERE r.start_date BETWEEN '{start_date}' AND '{end_date}'
+                WHERE r.start_at BETWEEN '{start_date}' AND '{end_date}'
             """
     df = sql.query_db(query, "raw_events")
     df = add_grade_column(df)
