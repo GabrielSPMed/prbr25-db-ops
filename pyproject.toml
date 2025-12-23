@@ -1,6 +1,6 @@
 [project]
 name = "prbr25-db-ops"
-version = "0.7.1"
+version = "0.8.0"
 description = ""
 authors = [{ name = "Gabriel Medeiros", email = "gabrielspmedeiros@gmail.com" }]
 readme = "README.md"
@@ -10,6 +10,7 @@ dependencies = [
     "prbr25-logger @ git+https://github.com/GabrielSPMed/prbr25-logger",
     "pandas (>=2.3.3,<3.0.0)",
     "thefuzz (>=0.22.1,<0.23.0)",
+    "prbr25-weights @ git+https://github.com/GabrielSPMed/prbr25-weights",
 ]
 
 
