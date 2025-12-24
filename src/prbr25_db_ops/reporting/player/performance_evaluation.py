@@ -47,12 +47,15 @@ def notable_wins(
     query = f"""SELECT
                     winner.tag AS vencedor,
                     loser.tag AS perdedor,
+                    p.tournament_name AS torneio,
+                    p.event_name AS evento,
                     m.round AS rodada,
                     loser.value - winner.value AS dif_pts
                 FROM matches AS m
                 LEFT JOIN players as winner ON m.winning_player_id = winner.id
                 LEFT JOIN players as loser ON m.losing_player_id = loser.id
                 LEFT JOIN raw_phases as p ON p.id = m.phase_id
+                LEFT JOIN raw_events as e ON e.id = p.event_id
                 WHERE p.event_id IN ({id_string})
                     AND loser.value - winner.value > 0
                     AND m.dq = False
