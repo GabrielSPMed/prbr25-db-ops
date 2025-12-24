@@ -38,3 +38,28 @@ def update_player_values(sql: Postgres, df: DataFrame) -> None:
 
         update_query = f"UPDATE players SET value = {new_value} WHERE id = {player_id}"
         sql.execute_update(update_query)
+
+
+def notable_wins(
+    sql: Postgres, id_list: list, save: bool = False, path: str = "."
+) -> DataFrame:
+    id_string = ", ".join(map(str, id_list))
+    query = f"""SELECT
+                    winner.tag AS vencedor,
+                    loser.tag AS perdedor,
+                    m.round AS rodada,
+                    loser.value - winner.value AS dif_pts
+                FROM matches AS m
+                LEFT JOIN players as winner ON m.winning_player_id = winner.id
+                LEFT JOIN players as loser ON m.losing_player_id = loser.id
+                LEFT JOIN raw_phases as p ON p.id = m.phase_id
+                WHERE p.event_id IN ({id_string})
+                    AND loser.value - winner.value > 0
+                    AND m.dq = False
+                ORDER BY dif_pts DESC"""
+    df = sql.query_db(query, "matches")
+    if save:
+        df.drop(["player_id", "value"], axis=1).to_csv(
+            f"{path}/upsets.csv", index=False
+        )
+    return df
