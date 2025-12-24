@@ -17,4 +17,24 @@ def get_player_monthly_performance(
         df.drop(["player_id", "value"], axis=1).to_csv(
             f"{path}/performance.csv", index=False
         )
+    update_player_values(sql, df)
     return df
+
+
+def update_player_values(sql: Postgres, df: DataFrame) -> None:
+    """
+    Update player values when their pontuacao is higher than their current value.
+
+    Args:
+        sql: Postgres connection object
+        df: DataFrame with columns 'player_id', 'pontuacao', and 'value'
+    """
+    # Filter players whose pontuacao is higher than their current value
+    players_to_update = df[df["pontuacao"] > df["value"]]
+
+    for _, row in players_to_update.iterrows():
+        player_id = int(row["player_id"])
+        new_value = float(row["pontuacao"])
+
+        update_query = f"UPDATE players SET value = {new_value} WHERE id = {player_id}"
+        sql.execute_update(update_query)
