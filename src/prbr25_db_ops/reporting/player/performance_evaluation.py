@@ -59,7 +59,5 @@ def notable_wins(
                 ORDER BY dif_pts DESC"""
     df = sql.query_db(query, "matches")
     if save:
-        df.drop(["player_id", "value"], axis=1).to_csv(
-            f"{path}/upsets.csv", index=False
-        )
+        df.to_csv(f"{path}/upsets.csv", index=False)
     return df
