@@ -1,6 +1,6 @@
 [project]
 name = "prbr25-db-ops"
-version = "1.0.0"
+version = "1.0.1"
 description = ""
 authors = [{ name = "Gabriel Medeiros", email = "gabrielspmedeiros@gmail.com" }]
 readme = "README.md"

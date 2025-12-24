@@ -15,9 +15,7 @@ def create_monthly_tracking_dataframe(start_year: int, start_month: int) -> Data
     month = start_month
 
     for _ in range(12):
-        data.append(
-            {"year": year, "month": month, "report": False, "updated_values": False}
-        )
+        data.append({"year": year, "month": month, "report": False})
 
         month += 1
         if month > 12:
