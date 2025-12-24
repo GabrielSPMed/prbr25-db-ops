@@ -6,7 +6,7 @@ def get_player_monthly_performance(
     sql: Postgres, id_list: list, save: bool = False, path: str = "."
 ) -> DataFrame:
     id_string = ", ".join(map(str, id_list))
-    query = f"""SELECT p.tag, e.tournament_name AS torneio, e.event_name AS evento, s.perf_score as pontuacao_performance, s.player_id
+    query = f"""SELECT p.tag, s.standing AS pos, e.tournament_name AS torneio, e.event_name AS evento, s.perf_score as pontuacao, s.player_id
                 FROM standings AS s
                 LEFT JOIN players AS p ON s.player_id = p.id
                 LEFT JOIN raw_events AS e ON s.event_id = e.id
