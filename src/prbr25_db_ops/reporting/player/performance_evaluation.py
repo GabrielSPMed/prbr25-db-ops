@@ -47,8 +47,8 @@ def notable_wins(
     query = f"""SELECT
                     winner.tag AS vencedor,
                     loser.tag AS perdedor,
-                    p.tournament_name AS torneio,
-                    p.event_name AS evento,
+                    e.tournament_name AS torneio,
+                    e.event_name AS evento,
                     m.round AS rodada,
                     loser.value - winner.value AS dif_pts
                 FROM matches AS m
