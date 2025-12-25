@@ -11,7 +11,15 @@ def get_validated_tournaments(
 ) -> tuple[DataFrame, Series]:
     start_date = datetime(year, month, 1)
     end_date = start_date + relativedelta(months=1)
-    query = f"""SELECT r.tournament_name, r.event_name, r.address_state, r.start_at, r.num_entrants, c.value AS score, c.n_dqs, r.url, r.id
+    query = f"""SELECT r.tournament_name AS torneio,
+                    r.event_name AS evento,
+                    r.address_state AS estado,
+                    r.start_at AS data_de_inicio,
+                    r.num_entrants AS numero_inscritos,
+                    c.value AS score,
+                    c.n_dqs,
+                    r.url,
+                    r.id
                 FROM raw_events AS r
                 INNER JOIN consolidated_events AS c ON r.id = c.id
                 WHERE r.validated AND r.start_at BETWEEN '{start_date}' AND '{end_date}'
