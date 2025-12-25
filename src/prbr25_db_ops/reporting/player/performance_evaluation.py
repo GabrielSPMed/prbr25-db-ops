@@ -1,5 +1,8 @@
 from pandas import DataFrame
+from prbr25_logger.logger import setup_logger
 from prbr25_rds_client.postgres import Postgres
+
+logger = setup_logger(__name__)
 
 
 def get_player_monthly_performance(
@@ -45,12 +48,20 @@ def update_player_values(sql: Postgres, df: DataFrame) -> None:
     # Filter players whose pontuacao is higher than their current value
     players_to_update = df_filtered[df_filtered["pontuacao"] > df_filtered["value"]]
 
+    if len(players_to_update) == 0:
+        logger.info("No players increased in value")
+        return
+
     for _, row in players_to_update.iterrows():
         player_id = int(row["player_id"])
+        player_tag = row["tag"]
+        old_value = float(row["value"])
         new_value = float(row["pontuacao"])
 
         update_query = f"UPDATE players SET value = {new_value} WHERE id = {player_id}"
         sql.execute_update(update_query)
+
+        logger.info(f"Player {player_tag} ranked up: {old_value} -> {new_value}")
 
 
 def notable_wins(
