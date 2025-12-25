@@ -6,15 +6,16 @@ def get_player_monthly_performance(
     sql: Postgres, id_list: list, save: bool = False, path: str = "."
 ) -> DataFrame:
     id_string = ", ".join(map(str, id_list))
-    query = f"""SELECT p.tag, s.standing AS pos, e.tournament_name AS torneio, e.event_name AS evento, s.perf_score as pontuacao, s.player_id, p.value
+    query = f"""SELECT p.tag, s.standing AS pos, e.tournament_name AS torneio, e.event_name AS evento, s.perf_score as pontuacao, s.player_id, p.value, e.address_state, ce.value AS event_score
                 FROM standings AS s
                 LEFT JOIN players AS p ON s.player_id = p.id
                 LEFT JOIN raw_events AS e ON s.event_id = e.id
+                LEFT JOIN consolidated_events as ce ON s.event_id = ce.id
                 WHERE s.event_id IN ({id_string}) AND s.perf_score > 0
                 ORDER BY s.perf_score DESC"""
     df = sql.query_db(query, "standings")
     if save:
-        df.drop(["player_id", "value"], axis=1).to_csv(
+        df.drop(["player_id", "value", "address_state", "event_score"], axis=1).to_csv(
             f"{path}/performance.csv", index=False
         )
     update_player_values(sql, df)
@@ -24,13 +25,25 @@ def get_player_monthly_performance(
 def update_player_values(sql: Postgres, df: DataFrame) -> None:
     """
     Update player values when their pontuacao is higher than their current value.
+    Only considers rows with the highest event_score for each address_state.
 
     Args:
         sql: Postgres connection object
-        df: DataFrame with columns 'player_id', 'pontuacao', and 'value'
+        df: DataFrame with columns 'player_id', 'pontuacao', 'value', 'address_state', and 'event_score'
     """
+    # Get the max event_score for each address_state
+    max_event_scores = df.groupby("address_state")["event_score"].max()
+
+    # Filter to only keep rows with max event_score for their state
+    df_filtered = df[
+        df.apply(
+            lambda row: row["event_score"] == max_event_scores[row["address_state"]],
+            axis=1,
+        )
+    ]
+
     # Filter players whose pontuacao is higher than their current value
-    players_to_update = df[df["pontuacao"] > df["value"]]
+    players_to_update = df_filtered[df_filtered["pontuacao"] > df_filtered["value"]]
 
     for _, row in players_to_update.iterrows():
         player_id = int(row["player_id"])
