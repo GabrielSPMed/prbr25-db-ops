@@ -17,5 +17,5 @@ def get_rejected_tournaments(
     df = sql.query_db(query, "raw_events")
     df["motivo"] = ""
     if save:
-        df.to_csv(f"{path}/consolidated_events.csv", index=False)
+        df.to_csv(f"{path}/rejected_events.csv", index=False)
     return df
